@@ -63,8 +63,28 @@ function api() {
         echo "$items_json" | jq -r '.[] | "export \(.title)=\"op://'"$CREDENTIAL_PATTERN_VAULT"'/\(.title)/credential\""'
         echo ""
         echo "# Tool aliases (op run wrappers, derived from cli: tags in 1Password)"
-        echo "$items_json" | jq -r '[.[] | .tags[]? | select(startswith("cli:")) | ltrimstr("cli:")] | unique[] | "alias \(.)='"'"'op run -- \(.)'"'"'"'
+        local cli_tools
+        cli_tools=$(echo "$items_json" | jq -r '[.[] | .tags[]? | select(startswith("cli:")) | ltrimstr("cli:")] | unique[]')
+        local missing=()
+        while IFS= read -r tool; do
+          [[ -z "$tool" ]] && continue
+          if command -v "$tool" &>/dev/null; then
+            echo "alias ${tool}='op run -- ${tool}'"
+          else
+            missing+=("$tool")
+            echo "# SKIPPED: '${tool}' not found in PATH"
+          fi
+        done <<< "$cli_tools"
       } > "$out"
+      if (( ${#missing[@]} )); then
+        echo ""
+        echo "WARNING: The following cli: tagged tools were not found in PATH and were skipped:"
+        printf '  - %s\n' "${missing[@]}"
+        echo ""
+        echo "These need to be real executables. If they're aliases/functions, wrap them"
+        echo "in a script in ~/bin/ or similar. See: examples/op-run-tags.md"
+      fi
+      echo ""
       echo "Written to $out — run 'source $out' or restart your shell."
       ;;
 
