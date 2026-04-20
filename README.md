@@ -7,11 +7,11 @@ A portable shell pattern for managing API credentials and CLI tool secrets using
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │  1Password Vault (Personal)                                     │
-│  ┌──────────────────────┐  ┌──────────────────────┐            │
-│  │ Category:            │  │ Tags:                 │            │
-│  │   "API Credential"   │  │   cli:bee             │            │
-│  │ Field: credential    │  │   cli:calvibe         │            │
-│  └──────────────────────┘  └──────────────────────┘            │
+│  ┌──────────────────────┐  ┌──────────────────────┐             │
+│  │ Category:            │  │ Tags:                │             │
+│  │   "API Credential"   │  │   cli:bee            │             │
+│  │ Field: credential    │  │   cli:calvibe        │             │
+│  └──────────────────────┘  └──────────────────────┘             │
 └─────────────────────────────────────────────────────────────────┘
         │                           │
         ▼                           ▼
