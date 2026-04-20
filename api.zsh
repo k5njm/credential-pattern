@@ -113,6 +113,22 @@ function api() {
       echo "  export OP_SERVICE_ACCOUNT_TOKEN='$token'" >&2
       ;;
 
+    scan)
+      # Launch the credential scanner TUI
+      local script_dir
+      if [[ -n "${ZSH_VERSION:-}" ]]; then
+        script_dir="${0:a:h}"
+      else
+        script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+      fi
+      local venv_dir="$script_dir/scan_venv"
+      if [[ ! -d "$venv_dir" ]]; then
+        echo "Setting up scan tool venv..." >&2
+        python3 -m venv "$venv_dir" && "$venv_dir/bin/pip" install -q -r "$script_dir/requirements.txt" >&2
+      fi
+      "$venv_dir/bin/python" -m scan "${@:2}"
+      ;;
+
     help|-h|--help)
       cat <<'HELP'
 api - 1Password-backed API credential manager
@@ -124,6 +140,8 @@ Commands:
   api del <name>            Delete a credential (with confirmation)
   api update                Regenerate ~/.zshrc_op_secrets from vault
   api token <vault> [hours] Generate a scoped service account token (default: 8h)
+  api scan                  Launch TUI to find and import hardcoded secrets
+  api scan --list           List detected secrets without TUI
   api help                  Show this help
 
 Environment:

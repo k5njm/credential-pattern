@@ -2,3 +2,8 @@
 .zshrc_op_secrets
 *.token
 .env
+
+# Python
+scan_venv/
+__pycache__/
+*.pyc
