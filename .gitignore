@@ -1,0 +1,4 @@
+# Never commit actual secrets
+.zshrc_op_secrets
+*.token
+.env
